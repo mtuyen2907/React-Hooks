@@ -40,7 +40,6 @@ function TodoForm(props) {
         </form>
     );
 }
-
 export default TodoForm;
 
 /** Bài tập 3: TodoList - Add new Todo
