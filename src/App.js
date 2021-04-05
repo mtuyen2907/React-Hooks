@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 import ColorBox from './components/ColorBox';
 import TodoList from './components/TodoList';
 import TodoForm from './components/TodoForm';
+import PostList from './components/PostList';
 
 function App() {
   const [todoList, setTodoList] = useState([
@@ -10,6 +11,29 @@ function App() {
     { id: 2, title: 'We luv Easy Frontend' },
     { id: 3, title: 'They luv Easy Frontend' },
   ]);
+
+  const [postList, setPostList] = useState([]);
+
+  useEffect(() => {
+    async function fetchPostList() {
+      try {
+        const requestUrl = 'http://js-post-api.herokuapp.com/api/posts?_limit=10&_page=1';
+        const response = await fetch(requestUrl);
+        const responseJSON = await response.json();
+        console.log({ responseJSON });
+
+        const { data } = responseJSON;
+        setPostList(data);
+      } catch (error) {
+        console.log('Failed to fetch post list', error.message);
+      }
+    }
+
+    fetchPostList();
+  }, []);  //mảng trống dependencies chạy đúng 1 lần
+  useEffect(() => {
+    console.log('TODO list effect');
+  }); //không có dependencies luôn luôn chạy sau mỗi lần render
 
   //Todo List
   function handleTodoClick(todo) {
@@ -21,6 +45,7 @@ function App() {
     newTodoList.splice(index, 1);
     setTodoList(newTodoList);
   }
+
   //Todo Form
   function handleTodoFormSubmit(formValues) {
     console.log('Form submit: ', formValues);
@@ -30,6 +55,7 @@ function App() {
       id: todoList.length + 1,
       ...formValues,
     };
+
     const newTodoList = [...todoList];
     newTodoList.push(newTodo);
     setTodoList(newTodoList);
@@ -38,10 +64,11 @@ function App() {
     <div className="App">
       <h1>WELLCOME</h1>
       <h1>React Hooks - TodoList</h1>
+      <PostList posts={postList} />
+
       <TodoForm onSubmit={handleTodoFormSubmit} />
       <TodoList todos={todoList}
         onTodoClick={handleTodoClick} />
-
       <ColorBox />
     </div>
 
@@ -49,22 +76,3 @@ function App() {
 }
 
 export default App;
- /** Bài tập 2: TodoList - list and remove
-* 1. Render danh sách todos với dữ liệu đc truyền từ component cha
-* 2. Khi click lên 1 item thì remove item đó khỏi danh sách
-*
-* PHÂN TÍCH
-* App
-*   - Props: N/A
-*   - State: todoList
-*   - Handler: handleTodoCLick - Remove todo ra khỏi state todoList
-*   - Render: <TodoList todos={todoList}
-*               onTodoClick={handleTodoClick} />
-*  TodoList
-*  - Props:
-*    + todos: danh sách todos
-*    + onTodoClick: hàm sẽ đc gọi khi một todo đc click
-*  - State: N/A
-*  - Render: ul> li> todo.title
-*  - Handle todo onClick: gọi hàm props.onnTodoClick()
-*/
