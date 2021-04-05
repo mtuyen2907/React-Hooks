@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './App.scss';
-import ColorBox from './component/ColorBox';
-import TodoList from './component/TodoList';
+import ColorBox from './components/ColorBox';
+import TodoList from './components/TodoList';
+import TodoForm from './components/TodoForm';
 
 function App() {
   const [todoList, setTodoList] = useState([
@@ -10,6 +11,7 @@ function App() {
     { id: 3, title: 'They luv Easy Frontend' },
   ]);
 
+  //Todo List
   function handleTodoClick(todo) {
     console.log(todo);
     const index = todoList.findIndex(x => x.id === todo.id);
@@ -19,17 +21,33 @@ function App() {
     newTodoList.splice(index, 1);
     setTodoList(newTodoList);
   }
+  //Todo Form
+  function handleTodoFormSubmit(formValues) {
+    console.log('Form submit: ', formValues);
+
+    //add new todo to current todo list
+    const newTodo = {
+      id: todoList.length + 1,
+      ...formValues,
+    };
+    const newTodoList = [...todoList];
+    newTodoList.push(newTodo);
+    setTodoList(newTodoList);
+  }
   return (
     <div className="App">
+      <h1>WELLCOME</h1>
       <h1>React Hooks - TodoList</h1>
-
+      <TodoForm onSubmit={handleTodoFormSubmit} />
       <TodoList todos={todoList}
         onTodoClick={handleTodoClick} />
 
       <ColorBox />
     </div>
+
   );
 }
+
 export default App;
  /** Bài tập 2: TodoList - list and remove
 * 1. Render danh sách todos với dữ liệu đc truyền từ component cha

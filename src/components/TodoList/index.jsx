@@ -17,7 +17,6 @@ function TodoList(props) {
         if (onTodoClick) {
             onTodoClick(todo);
         }
-
     }
     return (
         <ul className="todo-list">
@@ -32,4 +31,4 @@ function TodoList(props) {
     );
 }
 
-export default TodoList;
+export default TodoList
